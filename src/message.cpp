@@ -551,8 +551,11 @@ string message::format_header(bool add_bcc_header) const
             string::size_type l1p = static_cast<string::size_type>(line_policy_) - hdr.first.length() - HEADER_SEPARATOR_STR.length();
             bit7 b7(l1p, static_cast<string::size_type>(line_policy_));
             vector<string> hdr_enc = b7.encode(hdr.second);
-            header += hdr.first + HEADER_SEPARATOR_STR + hdr_enc.at(0) + codec::END_OF_LINE;
-            header += fold_header_line(hdr_enc);
+            if (!hdr_enc.empty())
+            {
+				header += hdr.first + HEADER_SEPARATOR_STR + hdr_enc.at(0) + codec::END_OF_LINE;
+				header += fold_header_line(hdr_enc);
+            }
         }
     );
 
