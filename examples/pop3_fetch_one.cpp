@@ -1,59 +1,60 @@
-/*
-
-pop3s_fetch_one.cpp
--------------------
-
-Connects to POP3 server via SSL and fetches the first message from mailbox.
-
-
-Copyright (C) 2016, Tomislav Karastojkovic (http://www.alepho.com).
-
-Distributed under the FreeBSD license, see the accompanying file LICENSE or
-copy at http://www.freebsd.org/copyright/freebsd-license.html.
-
-*/
-
-
-#include <mailio/message.hpp>
+﻿#include <mailio/message.hpp>
 #include <mailio/pop3.hpp>
 #include <iostream>
+#include <fstream>
+#include <string>
 
+using namespace mailio;
 
-using mailio::message;
-using mailio::codec;
-using mailio::pop3;
-using mailio::pop3_error;
-using mailio::dialog_error;
-using std::cout;
-using std::endl;
+int main() {
+	std::string server = "pop.163.com";
+	uint16_t port = 995;
+	std::string username = "w163testwlh@163.com";
+	std::string password = "FJKUVZPEOMEGUGKG"; // 替换为您的授权码
+	std::string save_path = "f:\\emails\\";
 
+	//try {
+		// 创建 POP3 SSL 客户端
+		pop3s conn(server, port);
+		conn.authenticate(username, password, pop3s::auth_method_t::LOGIN);
 
-int main()
-{
-    try
-    {
-        // mail message to store the fetched one
-        message msg;
-        // set the line policy to mandatory, so longer lines could be parsed
-        msg.line_policy(codec::line_len_policy_t::RECOMMENDED);
+		// 获取统计信息（邮件总数和总大小）
+		auto stats = conn.statistics();  // 使用 auto 避免类型问题
+		std::cout << "Total emails: " << stats.messages_no << std::endl;
 
-        // connect to server
-        pop3 conn("pop.mail.yahoo.com", 995);
-        conn.start_tls(false);
-        // modify to use existing yahoo account
-        conn.authenticate("mailio@yahoo.com", "mailiopass", pop3::auth_method_t::LOGIN);
-        // fetch the first message from mailbox
-        conn.fetch(1, msg);
-        cout << msg.subject() << endl;
-    }
-    catch (pop3_error& exc)
-    {
-        cout << exc.what() << endl;
-    }
-    catch (dialog_error& exc)
-    {
-        cout << exc.what() << endl;
-    }
+		// 遍历所有邮件
+		for (size_t i = 1; i <= stats.messages_no; ++i) {
+			message msg;
+			// 获取第 i 封邮件原始内容（RFC 822）
+			conn.fetch(i, msg);  // 两个参数版本
 
-    return EXIT_SUCCESS;
+			// 保存为 .eml 文件
+			std::string filename = save_path + "email_" + std::to_string(i) + ".eml";
+			std::ofstream outfile(filename, std::ios::binary);
+			if (!outfile.is_open()) {
+				std::cerr << "无法创建文件: " << filename << std::endl;
+				continue;
+			}
+
+			std::string fmtStr;
+			msg.format(fmtStr);
+			outfile.write(fmtStr.data(), fmtStr.size());
+			outfile.close();
+
+			std::cout << "邮件 " << i << " 已保存至 " << filename << std::endl;
+
+			// 可选：标记删除
+			// conn.dele(i);
+		}
+
+		// 可选：退出并提交删除
+		// conn.quit();
+
+//	}
+//	catch (const std::exception& e) {
+//		std::cerr << "错误: " << e.what() << std::endl;
+//		return -1;
+//	}
+
+	return 0;
 }
