@@ -46,20 +46,20 @@ if(NOT SHARE_INSTALL_DIR)
 endif(NOT SHARE_INSTALL_DIR)
 
 # options for mailio to control how the project is built.
-option(MAILIO_BUILD_DOCUMENTATION "Turn on to build doxygen based documentation." ON)
+option(MAILIO_BUILD_DOCUMENTATION "Turn on to build doxygen based documentation." OFF)
 option(MAILIO_BUILD_EXAMPLES "Turn on to build examples." ON)
-option(MAILIO_BUILD_TESTS "Turn on to build the tests." ON)
+option(MAILIO_BUILD_TESTS "Turn on to build the tests." OFF)
 option(MAILIO_DYN_LINK_TESTS "Turn on to dynamically link the tests." OFF)
 
-option(BUILD_SHARED_LIBS "Turn on to build mailio as a shared library. When off mailio is build as a static library." ON)
+option(BUILD_SHARED_LIBS "Turn on to build mailio as a shared library. When off mailio is build as a static library." OFF)
 
 # add a dependent option to build latex documentation or not.
 include(CMakeDependentOption)
 cmake_dependent_option(MAILIO_BUILD_LATEX_DOCUMENTATION "Build latex docs" ON "MAILIO_BUILD_DOCUMENTATION" ON)
 
-if(WIN32)
+#if(WIN32)
     set(Boost_USE_STATIC_LIBS ON)
-endif(WIN32)
+#endif(WIN32)
 
 find_package(Boost REQUIRED COMPONENTS date_time regex)
 find_package(OpenSSL)
