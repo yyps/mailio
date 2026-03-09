@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-
+#include <filesystem>
 using namespace mailio;
 
 int main() {
@@ -11,7 +11,8 @@ int main() {
 	uint16_t port = 995;
 	std::string username = "w163testwlh@163.com";
 	std::string password = "FJKUVZPEOMEGUGKG"; // 替换为您的授权码
-	std::string save_path = "f:\\emails\\";
+	std::string save_path = "./emails/";
+	std::filesystem::create_directories(save_path);
 
 	//try {
 		// 创建 POP3 SSL 客户端
