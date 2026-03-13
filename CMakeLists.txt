@@ -51,7 +51,7 @@ option(MAILIO_BUILD_EXAMPLES "Turn on to build examples." ON)
 option(MAILIO_BUILD_TESTS "Turn on to build the tests." OFF)
 option(MAILIO_DYN_LINK_TESTS "Turn on to dynamically link the tests." OFF)
 
-option(BUILD_SHARED_LIBS "Turn on to build mailio as a shared library. When off mailio is build as a static library." OFF)
+option(BUILD_SHARED_LIBS "Turn on to build mailio as a shared library. When off mailio is build as a static library." ON)
 
 # add a dependent option to build latex documentation or not.
 include(CMakeDependentOption)
