@@ -9,10 +9,10 @@
 #  ifndef MAILIO_EXPORT
 #    ifdef mailio_EXPORTS
         /* We are building this library */
-#      define MAILIO_EXPORT 
+#      define MAILIO_EXPORT __declspec(dllexport)
 #    else
         /* We are using this library */
-#      define MAILIO_EXPORT 
+#      define MAILIO_EXPORT __declspec(dllimport)
 #    endif
 #  endif
 
@@ -22,7 +22,7 @@
 #endif
 
 #ifndef MAILIO_DEPRECATED
-#  define MAILIO_DEPRECATED __attribute__ ((__deprecated__))
+#  define MAILIO_DEPRECATED __declspec(deprecated)
 #endif
 
 #ifndef MAILIO_DEPRECATED_EXPORT
