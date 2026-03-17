@@ -2,3 +2,8 @@ sudo apt-get install libboost-all-dev libssl-dev
 mkdir build
 cmake ..
 make
+
+
+
+cmake .. -DBoost_INCLUDE_DIR="D:/boost/boost_1_87_0" -DBOOST_LIBRARYDIR="D:/boost/boost_1_87_0/lib32-msvc-14.2" -DOPENSSL_ROOT_DIR="F:/vcpkg/installed/x86-windows" -DOPENSSL_INCLUDE_DIR="F:/vcpkg/installed/x86-windows/include" -DOPENSSL_ROOT_DIR="F:/vcpkg/installed/x86-windows/lib" -G "Visual Studio 16 2019" -A Win32 -T v142
+ 
