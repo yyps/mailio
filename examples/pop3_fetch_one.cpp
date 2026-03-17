@@ -6,7 +6,47 @@
 #include <filesystem>
 using namespace mailio;
 
-int main() {
+enum email_protocol
+{
+	EP_POP3,
+	EP_IMAP
+};
+
+class CRemoteMailsHelper
+{
+public:
+	/*
+	 * Brief: 拉取远程邮箱存为本地eml文件
+	 * Param:mailAddr 邮箱地址
+	 * Param:authCode 邮箱授权码
+	 **/
+	static bool remote_mails_to_emls(const std::string& mailAddr, 
+		const std::string& authCode, 
+		const email_protocol& ep, 
+		const int32_t port,
+		const std::string& savePath, 
+		bool withSSL,
+		std::string& errorMsg)
+	{
+		bool b = false;
+		try
+		{
+
+		}
+		catch (const pop3_error& e)
+		{
+
+		}
+		catch (const std::exception& e)
+		{
+
+		}
+		return b;
+	}
+};
+
+int main() 
+{
 	std::string server = "pop.163.com";
 	uint16_t port = 995;
 	std::string username = "w163testwlh@163.com";
@@ -14,7 +54,8 @@ int main() {
 	std::string save_path = "./emails/";
 	std::filesystem::create_directories(save_path);
 
-	//try {
+	try 
+	{
 		// 创建 POP3 SSL 客户端
 		pop3s conn(server, port);
 		conn.authenticate(username, password, pop3s::auth_method_t::LOGIN);
@@ -43,19 +84,13 @@ int main() {
 			outfile.close();
 
 			std::cout << "邮件 " << i << " 已保存至 " << filename << std::endl;
-
-			// 可选：标记删除
-			// conn.dele(i);
 		}
-
-		// 可选：退出并提交删除
-		// conn.quit();
-
-//	}
-//	catch (const std::exception& e) {
-//		std::cerr << "错误: " << e.what() << std::endl;
-//		return -1;
-//	}
+	}
+	catch (const std::exception& e) 
+	{
+		std::cerr << "错误: " << e.what() << std::endl;
+		return -1;
+	}
 
 	return 0;
 }
