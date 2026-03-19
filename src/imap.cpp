@@ -348,6 +348,28 @@ auto imap::select(const string& mailbox, bool read_only) -> mailbox_stat_t
 }
 
 
+void imap::regist_client(const std::string& clientName, const std::string& clientVersion)
+{
+	std::string cmd_ = "ID (\"name\" \"" + clientName + "\" \"version\" \"" + clientVersion + "\")";
+	auto cmd = format(cmd_);
+	dlg_->send(cmd);
+	bool has_more = true;
+	while (has_more)
+	{
+		std::string line = dlg_->receive();
+		tag_result_response_t parsed_line = parse_tag_result(line);
+
+		if (parsed_line.tag == UNTAGGED_RESPONSE)
+			continue;
+		if (parsed_line.tag != std::to_string(tag_))
+			throw imap_error("Incorrect tag.", "Tag=`" + parsed_line.tag + "`.");
+		if (parsed_line.result.value() != tag_result_response_t::OK)
+			throw imap_error("regist_client failure.", "line=`" + line + "`.");
+
+		has_more = false;
+	}
+}
+
 void imap::fetch(const string& mailbox, unsigned long message_no, bool is_uid, message& msg, bool header_only)
 {
     select(mailbox);

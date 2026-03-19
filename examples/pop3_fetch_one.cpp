@@ -6,45 +6,6 @@
 #include <filesystem>
 using namespace mailio;
 
-enum email_protocol
-{
-	EP_POP3,
-	EP_IMAP
-};
-
-class CRemoteMailsHelper
-{
-public:
-	/*
-	 * Brief: 拉取远程邮箱存为本地eml文件
-	 * Param:mailAddr 邮箱地址
-	 * Param:authCode 邮箱授权码
-	 **/
-	static bool remote_mails_to_emls(const std::string& mailAddr, 
-		const std::string& authCode, 
-		const email_protocol& ep, 
-		const int32_t port,
-		const std::string& savePath, 
-		bool withSSL,
-		std::string& errorMsg)
-	{
-		bool b = false;
-		try
-		{
-
-		}
-		catch (const pop3_error& e)
-		{
-
-		}
-		catch (const std::exception& e)
-		{
-
-		}
-		return b;
-	}
-};
-
 int main() 
 {
 	std::string server = "pop.163.com";

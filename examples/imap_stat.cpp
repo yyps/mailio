@@ -30,9 +30,9 @@ int main()
     try
     {
         // connect to server
-        imap conn("imap.zoho.com", 143);
+        imap conn("imap.163.com", 143);
         // modify to use an existing zoho account
-        conn.authenticate("mailio@zoho.com", "mailiopass", imap::auth_method_t::LOGIN);
+        conn.authenticate("w163testsr@163.com", "UIFDFRMWUMEMAUIE", imap::auth_method_t::LOGIN);
         // query inbox statistics
         imap::mailbox_stat_t stat = conn.statistics("inbox");
         cout << "Number of messages in mailbox: " << stat.messages_no << endl;

@@ -237,6 +237,11 @@ public:
     **/
     std::string authenticate(const std::string& username, const std::string& password, auth_method_t method);
 
+    /*
+    * IMAP协议向注册客户端信息，这一步需要在authenticate成功之后调用，否则select不成功。
+    **/
+    void regist_client(const std::string& clientName, const std::string& clientVersion);
+
     /**
     Selecting a mailbox.
 
@@ -262,6 +267,9 @@ public:
     @todo             Add server error messages to exceptions.
     **/
     mailbox_stat_t select(const std::string& mailbox, bool read_only = false);
+    
+   
+    
 
     /**
     Fetching a message from the mailbox.

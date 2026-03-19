@@ -37,10 +37,10 @@ int main()
 {
     try
     {
-        imap conn("imap-mail.outlook.com", 143);
+        imap conn("imap.163.com", 143);
         conn.start_tls(true);// // no need for this since it is the default setting
         // modify username/password to use real credentials
-        conn.authenticate("mailio@outlook.com", "mailiopass", imap::auth_method_t::LOGIN);
+        conn.authenticate("w163testsr@163.com", "UIFDFRMWUMEMAUIE", imap::auth_method_t::LOGIN);
         conn.select(list<string>({"Inbox"}));
         list<unsigned long> messages;
         list<imap::search_condition_t> conds;

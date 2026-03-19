@@ -45,10 +45,10 @@ int main()
 {
     try
     {
-        imap conn("imap.mailserver.com", 993);
-        conn.start_tls(false);
+        imap conn("imap.163.com", 143);
+        //conn.start_tls(false);
         // modify username/password to use real credentials
-        conn.authenticate("mailio@mailserver.com", "mailiopass", imap::auth_method_t::LOGIN);
+        conn.authenticate("w163testsr@163.com", "UIFDFRMWUMEMAUIE", imap::auth_method_t::LOGIN);
         imap::mailbox_folder_t fld = conn.list_folders("");
         print_folders(0, fld);
     }

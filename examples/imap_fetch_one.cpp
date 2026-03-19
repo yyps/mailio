@@ -21,6 +21,7 @@ copy at http://www.freebsd.org/copyright/freebsd-license.html.
 using mailio::message;
 using mailio::codec;
 using mailio::imap;
+using mailio::imaps;
 using mailio::imap_error;
 using mailio::dialog_error;
 using std::cout;
@@ -31,12 +32,14 @@ int main()
 {
     try
     {
-        imap conn("imap.zoho.com", 993);
-        conn.start_tls(false);
-        conn.authenticate("mailio@zoho.com", "mailiopass", imap::auth_method_t::LOGIN);
+        imaps conn("imap.126.com", 993);
+        conn.authenticate("w126testwlh@126.com", "PPWNEBXSTPPVIKWS", imaps::auth_method_t::LOGIN);
+        conn.regist_client("mail_check_mod", "1.0");
         message msg;
-        msg.line_policy(codec::line_len_policy_t::MANDATORY);
-        conn.fetch("inbox", 1, false, msg);
+        msg.line_policy(codec::line_len_policy_t::NONE);
+        conn.select("INBOX");
+        auto stat = conn.statistics("INBOX");
+        conn.fetch(1, msg);
         cout << "msg.content()=" << msg.content() << endl;
     }
     catch (imap_error& exc)
