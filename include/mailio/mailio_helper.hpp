@@ -7,12 +7,12 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <filesystem>
+#include <boost/filesystem.hpp>
 #include <regex>
 #include <sstream>
 
 using namespace mailio;
-
+namespace boost_fs = boost::filesystem;
 /**
  * 邮箱协议枚举类型
  */
@@ -68,15 +68,15 @@ public:
 			uint16_t port = determinePort(ep, withSSL);
 			if (port == 0)
 			{
-				//errorMsg = "无效的协议类型";
+				errorMsg = "Invalid port!";
 				return false;
 			}
 
 			// 创建保存目录
-			std::error_code ec;
-			if (!std::filesystem::exists(savePath, ec))
+			boost::system::error_code ec;
+			if (!boost_fs::exists(savePath, ec))
 			{
-				if (!std::filesystem::create_directories(savePath, ec))
+				if (!boost_fs::create_directories(savePath, ec))
 				{
 					errorMsg = "Create directoriy failed: " + savePath + ", ec: " + ec.message();
 					return false;
@@ -111,11 +111,6 @@ public:
 		catch (const dialog_error& e)
 		{
 			errorMsg = std::string("net error: ") + e.what();
-			return false;
-		}
-		catch (const std::filesystem::filesystem_error& e)
-		{
-			errorMsg = std::string("filesystem: ") + e.what();
 			return false;
 		}
 		catch (const std::exception& e)
