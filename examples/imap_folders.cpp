@@ -48,8 +48,8 @@ int main()
         imap conn("imap.163.com", 143);
         //conn.start_tls(false);
         // modify username/password to use real credentials
-        conn.authenticate("w163testsr@163.com", "UIFDFRMWUMEMAUIE", imap::auth_method_t::LOGIN);
-        imap::mailbox_folder_t fld = conn.list_folders("");
+        conn.authenticate("test163wlh1@163.com", "CNOWUTNBDKBKIMGR", imap::auth_method_t::LOGIN);
+        imap::mailbox_folder_t fld = conn.list_folders("INBOX");
         print_folders(0, fld);
     }
     catch (imap_error& exc)

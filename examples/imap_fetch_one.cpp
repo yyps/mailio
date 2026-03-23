@@ -37,8 +37,10 @@ int main()
         conn.regist_client("mail_check_mod", "1.0");
         message msg;
         msg.line_policy(codec::line_len_policy_t::NONE);
+        imap::mailbox_folder_t fld = conn.list_folders("INBOX");
         conn.select("INBOX");
         auto stat = conn.statistics("INBOX");
+        //auto dirs = conn.list_folders("");
         conn.fetch(1, msg);
         cout << "msg.content()=" << msg.content() << endl;
     }

@@ -1321,11 +1321,33 @@ void imap::parse_response(const string& response)
                 }
                 else if (atom_state_ == atom_state_t::QUOTED)
                 {
+					// 安全获取最后一个字符（保证字符串非空才访问）
+					if (!token_list->back()->atom.empty()) 
+                    {
+						char& last_char = token_list->back()->atom.back();
+						if (last_char != codec::BACKSLASH_CHAR) 
+                        {
+							atom_state_ = atom_state_t::NONE;
+						}
+						else 
+                        {
+							// 移除反斜杠，只保留当前字符 ch（正确的转义处理）
+							token_list->back()->atom.pop_back();
+							token_list->back()->atom.push_back(ch);
+						}
+					}
+					else 
+                    {
+						// 空字符串时直接设置当前字符，避免访问 back()
+						token_list->back()->atom.push_back(ch);
+						atom_state_ = atom_state_t::NONE;
+					}
+
                     // The backslash and a double quote within an atom is the double quote only.
-                    if (token_list->back()->atom.back() != codec::BACKSLASH_CHAR)
+                   /* if (token_list->back()->atom.back() != codec::BACKSLASH_CHAR)
                         atom_state_ = atom_state_t::NONE;
                     else
-                        token_list->back()->atom.back() = ch;
+                        token_list->back()->atom.back() = ch;*/
                 }
             }
             break;
