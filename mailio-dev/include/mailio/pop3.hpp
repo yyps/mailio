@@ -265,7 +265,7 @@ protected:
 /**
 Secure version of POP3 client.
 **/
-class MAILIO_DEPRECATED pop3s : public pop3
+class MAILIO_EXPORT /*MAILIO_DEPRECATED*/ pop3s : public pop3
 {
 public:
 
