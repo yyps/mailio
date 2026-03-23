@@ -244,6 +244,7 @@ private:
 			msg.format(fmtStr);
 			outfile.write(fmtStr.data(), fmtStr.size());
 			outfile.close();
+			saveCnt++;
 		}
 		if (saveCnt == 0)
 		{
@@ -301,7 +302,7 @@ private:
 	{
 		// 选择收件箱
 		auto stats = conn.select("INBOX", true);
-		auto dirs = conn.list_folders("INBOX");
+		//auto dirs = conn.list_folders("INBOX");
 		unsigned int totalMails = stats.messages_no;
 
 		if (totalMails == 0)

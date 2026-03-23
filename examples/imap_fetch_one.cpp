@@ -16,12 +16,14 @@ copy at http://www.freebsd.org/copyright/freebsd-license.html.
 
 #include <iostream>
 #include <mailio/imap.hpp>
+#include <mailio/pop3.hpp>
 
 
 using mailio::message;
 using mailio::codec;
 using mailio::imap;
 using mailio::imaps;
+using mailio::pop3s;
 using mailio::imap_error;
 using mailio::dialog_error;
 using std::cout;
@@ -32,17 +34,20 @@ int main()
 {
     try
     {
-        imaps conn("imap.126.com", 993);
+        pop3s conn("imap.126.com", 993);
         conn.authenticate("w126testwlh@126.com", "PPWNEBXSTPPVIKWS", imaps::auth_method_t::LOGIN);
-        conn.regist_client("mail_check_mod", "1.0");
-        message msg;
-        msg.line_policy(codec::line_len_policy_t::NONE);
-        imap::mailbox_folder_t fld = conn.list_folders("INBOX");
-        conn.select("INBOX");
-        auto stat = conn.statistics("INBOX");
-        //auto dirs = conn.list_folders("");
-        conn.fetch(1, msg);
-        cout << "msg.content()=" << msg.content() << endl;
+        //conn.authenticate("w126testwlh@126.com", "PPWNEBXSTPPVIKWS", imaps::auth_method_t::LOGIN);
+        //imaps conn("imap.126.com", 993);
+        //conn.authenticate("w126testwlh@126.com", "PPWNEBXSTPPVIKWS", imaps::auth_method_t::LOGIN);
+        //conn.regist_client("mail_check_mod", "1.0");
+        //message msg;
+        //msg.line_policy(codec::line_len_policy_t::NONE);
+        //imap::mailbox_folder_t fld = conn.list_folders("INBOX");
+        //conn.select("INBOX");
+        //auto stat = conn.statistics("INBOX");
+        ////auto dirs = conn.list_folders("");
+        //conn.fetch(1, msg);
+        //cout << "msg.content()=" << msg.content() << endl;
     }
     catch (imap_error& exc)
     {
