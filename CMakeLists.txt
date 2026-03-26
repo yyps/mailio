@@ -58,9 +58,9 @@ include(CMakeDependentOption)
 cmake_dependent_option(MAILIO_BUILD_LATEX_DOCUMENTATION "Build latex docs" ON "MAILIO_BUILD_DOCUMENTATION" ON)
 
 # Set Boost paths for Windows
-#if(WIN32)
+if(WIN32)
     set(Boost_USE_STATIC_LIBS ON)
-#endif(WIN32)
+endif(WIN32)
 
 find_package(Boost REQUIRED COMPONENTS date_time regex)
 find_package(OpenSSL)
