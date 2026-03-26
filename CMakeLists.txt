@@ -47,7 +47,7 @@ endif(NOT SHARE_INSTALL_DIR)
 
 # options for mailio to control how the project is built.
 option(MAILIO_BUILD_DOCUMENTATION "Turn on to build doxygen based documentation." OFF)
-option(MAILIO_BUILD_EXAMPLES "Turn on to build examples." ON)
+option(MAILIO_BUILD_EXAMPLES "Turn on to build examples." OFF)
 option(MAILIO_BUILD_TESTS "Turn on to build the tests." OFF)
 option(MAILIO_DYN_LINK_TESTS "Turn on to dynamically link the tests." OFF)
 
@@ -234,3 +234,6 @@ if(${MAILIO_BUILD_TESTS})
     file(GLOB TXTS "${PROJECT_SOURCE_DIR}/test/cv.txt")
     install(FILES ${TXTS} DESTINATION "${SHARE_INSTALL_DIR}/${PROJECT_NAME}/test/")
 endif(${MAILIO_BUILD_TESTS})
+
+
+add_subdirectory(helper_demo)
