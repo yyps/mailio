@@ -189,13 +189,13 @@ private:
 			{
 				pop3s conn(server, port);
 				conn.authenticate(mailAddr, authCode, pop3s::auth_method_t::LOGIN);
-				return savePOP3Mails(conn, savePath);
+				return savePOP3Mails(conn, savePath, withSSL);
 			}
 			else
 			{
 				pop3 conn(server, port);
 				conn.authenticate(mailAddr, authCode, pop3::auth_method_t::LOGIN);
-				return savePOP3Mails(conn, savePath);
+				return savePOP3Mails(conn, savePath, withSSL);
 			}
 		}
 		catch (const pop3_error& e)
@@ -214,7 +214,7 @@ private:
 	 * 保存 POP3 邮件到文件
 	 */
 	template<typename POP3Type>
-	static bool savePOP3Mails(POP3Type& conn, const std::string& savePath)
+	static bool savePOP3Mails(POP3Type& conn, const std::string& savePath, bool ssl)
 	{
 		// 获取统计信息（邮件总数和总大小）
 		auto stats = conn.statistics();
@@ -232,9 +232,12 @@ private:
 			message msg;
 			conn.fetch(i, msg);
 
-			// 保存为 .eml 文件
-			std::string filename = savePath + "email_" + std::to_string(i) + ".eml";
-			std::ofstream outfile(filename, std::ios::binary);
+			boost_fs::path savePath_ = savePath;
+			std::string filename = "POP_";
+			filename += (ssl ? "S_" : "");
+			filename += std::to_string(i);
+			savePath_ /= filename;
+			std::ofstream outfile(savePath_.string(), std::ios::binary);
 			if (!outfile.is_open())
 			{
 				throw std::runtime_error("Can not create eml file: " + filename);
@@ -272,14 +275,14 @@ private:
 				imaps conn(server, port);
 				conn.authenticate(mailAddr, authCode, imaps::auth_method_t::LOGIN);
 				conn.regist_client("mail-check-mod", "1.0");// IMAP协议需要多这一步
-				return saveIMAPMails(conn, savePath);
+				return saveIMAPMails(conn, savePath, withSSL);
 			}
 			else
 			{
 				imap conn(server, port);
 				conn.authenticate(mailAddr, authCode, imap::auth_method_t::LOGIN);
 				conn.regist_client("mail-check-mod", "1.0");// IMAP协议需要多这一步
-				return saveIMAPMails(conn, savePath);
+				return saveIMAPMails(conn, savePath, withSSL);
 			}
 		}
 		catch (const imap_error& e)
@@ -298,11 +301,10 @@ private:
 	 * 保存 IMAP 邮件到文件
 	 */
 	template<typename IMAPType>
-	static bool saveIMAPMails(IMAPType& conn, const std::string& savePath)
+	static bool saveIMAPMails(IMAPType& conn, const std::string& savePath, bool ssl)
 	{
 		// 选择收件箱
 		auto stats = conn.select("INBOX", true);
-		//auto dirs = conn.list_folders("INBOX");
 		unsigned int totalMails = stats.messages_no;
 
 		if (totalMails == 0)
@@ -314,14 +316,16 @@ private:
 		int saveCnt = 0;
 		for (unsigned int i = 1; i <= totalMails; ++i)
 		{
-
 			message msg;
 			msg.line_policy(codec::line_len_policy_t::NONE);
 			conn.fetch(i, msg);
 
-			// 保存为 .eml 文件
-			std::string filename = savePath + "email_" + std::to_string(i) + ".eml";
-			std::ofstream outfile(filename, std::ios::binary);
+			boost_fs::path savePath_ = savePath;
+			std::string filename = "IMAP_";
+			filename += (ssl ? "S_" : "");
+			filename += std::to_string(i);
+			savePath_ /= filename;
+			std::ofstream outfile(savePath_.string(), std::ios::binary);
 			if (!outfile.is_open())
 			{
 				throw std::runtime_error("Can not create eml file: : " + filename);
