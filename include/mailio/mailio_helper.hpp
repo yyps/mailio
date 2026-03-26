@@ -7,12 +7,53 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <boost/filesystem.hpp>
-#include <regex>
+//#include <boost/filesystem.hpp>
+//#include <regex>
 #include <sstream>
 
+#include <stdio.h>
+#include <string.h>
+
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <sys/stat.h>
+#include <sys/types.h>
+#endif
+
+// 纯 C 跨平台创建单级目录
+int create_dir(const char* path)
+{
+#ifdef _WIN32
+	return CreateDirectoryA(path, NULL);
+#else
+	// Linux/macOS 权限 0755
+	return mkdir(path, 0755) == 0;
+#endif
+}
+
+// 纯 C 跨平台创建多级目录 a/b/c
+int create_dirs(const char* path)
+{
+	char tmp[256];
+	size_t len = strlen(path);
+	if (len >= sizeof(tmp)) return 0;
+
+	snprintf(tmp, sizeof(tmp), "%s", path);
+
+	// 替换所有 \ 或 /，逐级创建
+	for (size_t i = 0; i < len; i++) {
+		if (tmp[i] == '/' || tmp[i] == '\\') {
+			tmp[i] = '\0';
+			create_dir(tmp);
+			tmp[i] = '/';
+		}
+	}
+	return create_dir(path);
+}
+
 using namespace mailio;
-namespace boost_fs = boost::filesystem;
+//namespace boost_fs = boost::filesystem;
 /**
  * 邮箱协议枚举类型
  */
@@ -73,7 +114,7 @@ public:
 			}
 
 			// 创建保存目录
-			boost::system::error_code ec;
+			/*boost::system::error_code ec;
 			if (!boost_fs::exists(savePath, ec))
 			{
 				if (!boost_fs::create_directories(savePath, ec))
@@ -81,7 +122,9 @@ public:
 					errorMsg = "Create directoriy failed: " + savePath + ", ec: " + ec.message();
 					return false;
 				}
-			}
+			}*/
+
+			create_dir(savePath.c_str());
 
 			// 根据协议类型处理
 			if (ep == EP_POP3)
@@ -232,12 +275,12 @@ private:
 			message msg;
 			conn.fetch(i, msg);
 
-			boost_fs::path savePath_ = savePath;
+			auto savePath_ = savePath;
 			std::string filename = "POP_";
 			filename += (ssl ? "S_" : "");
 			filename += std::to_string(i);
-			savePath_ /= filename;
-			std::ofstream outfile(savePath_.string(), std::ios::binary);
+			savePath_ += filename;
+			std::ofstream outfile(savePath_, std::ios::binary);
 			if (!outfile.is_open())
 			{
 				throw std::runtime_error("Can not create eml file: " + filename);
@@ -320,12 +363,12 @@ private:
 			msg.line_policy(codec::line_len_policy_t::NONE);
 			conn.fetch(i, msg);
 
-			boost_fs::path savePath_ = savePath;
+			auto savePath_ = savePath;
 			std::string filename = "IMAP_";
 			filename += (ssl ? "S_" : "");
 			filename += std::to_string(i);
-			savePath_ /= filename;
-			std::ofstream outfile(savePath_.string(), std::ios::binary);
+			savePath_ += filename;
+			std::ofstream outfile(savePath_, std::ios::binary);
 			if (!outfile.is_open())
 			{
 				throw std::runtime_error("Can not create eml file: : " + filename);

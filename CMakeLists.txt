@@ -236,4 +236,4 @@ if(${MAILIO_BUILD_TESTS})
 endif(${MAILIO_BUILD_TESTS})
 
 
-add_subdirectory(helper_demo)
+#add_subdirectory(helper_demo)

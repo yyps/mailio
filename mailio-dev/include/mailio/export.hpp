@@ -9,10 +9,18 @@
 #  ifndef MAILIO_EXPORT
 #    ifdef mailio_EXPORTS
         /* We are building this library */
-#      define MAILIO_EXPORT __declspec(dllexport)
+#		ifdef WIN32
+#      		define MAILIO_EXPORT __declspec(dllexport)
+#		else
+#      		define MAILIO_EXPORT __attribute__((visibility("default")))
+#		endif
 #    else
         /* We are using this library */
-#      define MAILIO_EXPORT __declspec(dllimport)
+#		ifdef WIN32
+#      		define MAILIO_EXPORT __declspec(dllimport)
+#		else
+#      		define MAILIO_EXPORT __attribute__((visibility("default")))
+#		endif
 #    endif
 #  endif
 
