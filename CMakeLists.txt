@@ -50,6 +50,7 @@ option(MAILIO_BUILD_DOCUMENTATION "Turn on to build doxygen based documentation.
 option(MAILIO_BUILD_EXAMPLES "Turn on to build examples." OFF)
 option(MAILIO_BUILD_TESTS "Turn on to build the tests." OFF)
 option(MAILIO_DYN_LINK_TESTS "Turn on to dynamically link the tests." OFF)
+option(MAILIO_BUILD_DEMO "build demo" ON)
 
 option(BUILD_SHARED_LIBS "Turn on to build mailio as a shared library. When off mailio is build as a static library." ON)
 
@@ -236,4 +237,7 @@ if(${MAILIO_BUILD_TESTS})
 endif(${MAILIO_BUILD_TESTS})
 
 
-#add_subdirectory(helper_demo)
+if(${MAILIO_BUILD_DEMO})
+	add_subdirectory(helper_demo)
+endif(${MAILIO_BUILD_DEMO})
+

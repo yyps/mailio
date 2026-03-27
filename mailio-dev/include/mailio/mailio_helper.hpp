@@ -7,12 +7,12 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <regex>
 #include <sstream>
 
 using namespace mailio;
-namespace boost_fs = boost::filesystem;
+//namespace boost_fs = boost::filesystem;
 /**
  * 邮箱协议枚举类型
  */
@@ -73,10 +73,10 @@ public:
 			}
 
 			// 创建保存目录
-			boost::system::error_code ec;
-			if (!boost_fs::exists(savePath, ec))
+			std::error_code ec;
+			if (!std::filesystem::exists(savePath, ec))
 			{
-				if (!boost_fs::create_directories(savePath, ec))
+				if (!std::filesystem::create_directories(savePath, ec))
 				{
 					errorMsg = "Create directoriy failed: " + savePath + ", ec: " + ec.message();
 					return false;
@@ -232,12 +232,12 @@ private:
 			message msg;
 			conn.fetch(i, msg);
 
-			boost_fs::path savePath_ = savePath;
+			std::filesystem::path savePath_ = savePath;
 			std::string filename = "POP_";
 			filename += (ssl ? "S_" : "");
 			filename += std::to_string(i);
 			savePath_ /= filename;
-			std::ofstream outfile(savePath_.string(), std::ios::binary);
+			std::ofstream outfile(savePath_/*.string()*/, std::ios::binary);
 			if (!outfile.is_open())
 			{
 				throw std::runtime_error("Can not create eml file: " + filename);
@@ -320,12 +320,12 @@ private:
 			msg.line_policy(codec::line_len_policy_t::NONE);
 			conn.fetch(i, msg);
 
-			boost_fs::path savePath_ = savePath;
+			std::filesystem::path savePath_ = savePath;
 			std::string filename = "IMAP_";
 			filename += (ssl ? "S_" : "");
 			filename += std::to_string(i);
 			savePath_ /= filename;
-			std::ofstream outfile(savePath_.string(), std::ios::binary);
+			std::ofstream outfile(savePath_/*.string()*/, std::ios::binary);
 			if (!outfile.is_open())
 			{
 				throw std::runtime_error("Can not create eml file: : " + filename);
